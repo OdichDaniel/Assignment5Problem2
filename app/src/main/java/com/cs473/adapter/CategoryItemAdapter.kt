@@ -2,12 +2,11 @@ package com.cs473.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.cs473.databinding.CategoryItemLayoutBinding
-import com.cs473.model.ShoppingItem
+import com.cs473.model.Product
 
-class CategoryItemAdapter(private val items: Array<ShoppingItem>): RecyclerView.Adapter<CategoryItemAdapter.CategoryItemViewHolder>() {
+class CategoryItemAdapter(private val items: ArrayList<Product>, val onClickCallback: (product: Product) -> Unit): RecyclerView.Adapter<CategoryItemAdapter.CategoryItemViewHolder>() {
 
     private lateinit var binding: CategoryItemLayoutBinding
 
@@ -23,12 +22,15 @@ class CategoryItemAdapter(private val items: Array<ShoppingItem>): RecyclerView.
     override fun getItemCount(): Int = items.size
 
     inner class CategoryItemViewHolder(private val categoryView: CategoryItemLayoutBinding): RecyclerView.ViewHolder(categoryView.root){
-        fun bind(item: ShoppingItem){
+        fun bind(item: Product){
             categoryView.shoppingItemTv.text = item.title
+            categoryView.price.text = "Price: $${item.price}"
+            categoryView.color.text = "Color: ${item.color}"
             categoryView.imageview.setImageResource(item.imageUri)
             categoryView.root.setOnClickListener{
-                Toast.makeText(categoryView.root.context, "You have chosen " + item.title + " category of shopping", Toast.LENGTH_SHORT).show()
+                onClickCallback.invoke(item)
             }
+
         }
     }
 }

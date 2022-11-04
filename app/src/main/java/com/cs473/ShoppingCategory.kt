@@ -1,27 +1,18 @@
 package com.cs473
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cs473.adapter.CategoryItemAdapter
 import com.cs473.databinding.ActivityShoppingCategoryBinding
-import com.cs473.model.ShoppingItem
+import com.cs473.model.Product
 
 class ShoppingCategory : AppCompatActivity() {
 
     private lateinit var binding: ActivityShoppingCategoryBinding
-    private val items = arrayOf(
-        ShoppingItem("Electronics", R.drawable.electronics),
-        ShoppingItem("Clothing", R.drawable.clothing),
-        ShoppingItem("Beauty", R.drawable.beauty),
-        ShoppingItem("Food", R.drawable.food)
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +26,14 @@ class ShoppingCategory : AppCompatActivity() {
 
     private fun setUpRecyclerView(){
         val recyclerView = binding.contentLayout.recyclerView
-        val adapter = CategoryItemAdapter(items)
+        val adapter = CategoryItemAdapter(intent!!.getParcelableArrayListExtra<Product>("products") as ArrayList<Product>) { product: Product ->
+           val intent = Intent(this, ScrollingActivity::class.java)
+            intent.putExtra("product", product)
+            startActivity(intent)
+        }
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
     }
 
